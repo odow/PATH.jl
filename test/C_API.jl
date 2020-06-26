@@ -95,4 +95,17 @@ end
     )
     @test status == PATH.MCP_Solved
     @test isapprox(z, [1.28475, 0.972916, 0.909376, 1.17304], atol=1e-4)
+
+    status, z, info = PATH.solve_mcp(
+        F,
+        J,
+        fill(0.0, 4),
+        fill(10.0, 4),
+        [1.0, 1.0, 1.0, 1.0];
+        output = "yes",
+        factorization_method = "blu_lusol",
+        factorization_library_name = PATH.LUSOL_LIBRARY_PATH,
+    )
+    @test status == PATH.MCP_Solved
+    @test isapprox(z, [1.28475, 0.972916, 0.909376, 1.17304], atol=1e-4)
 end
