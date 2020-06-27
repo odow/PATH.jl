@@ -82,33 +82,37 @@ mutable struct Options
     end
 end
 
+Base.cconvert(::Type{Ptr{Cvoid}}, x::Options) = x
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::Options) = x.ptr
+
+
 function c_api_Options_Create()
     ptr = @c_api(Options_Create, Ptr{Cvoid}, ())
     return Options(ptr)
 end
 
 function c_api_Options_Destroy(o::Options)
-    @c_api(Options_Destroy, Cvoid, (Ptr{Cvoid},), o.ptr)
+    @c_api(Options_Destroy, Cvoid, (Ptr{Cvoid},), o)
     return
 end
 
 function c_api_Options_Default(o::Options)
-    @c_api(Options_Default, Cvoid, (Ptr{Cvoid},), o.ptr)
+    @c_api(Options_Default, Cvoid, (Ptr{Cvoid},), o)
     return
 end
 
 function c_api_Options_Display(o::Options)
-    @c_api(Options_Display, Cvoid, (Ptr{Cvoid},), o.ptr)
+    @c_api(Options_Display, Cvoid, (Ptr{Cvoid},), o)
     return
 end
 
 function c_api_Options_Read(o::Options, filename::String)
-    @c_api(Options_Read, Cvoid, (Ptr{Cvoid}, Ptr{Cchar}), o.ptr, filename)
+    @c_api(Options_Read, Cvoid, (Ptr{Cvoid}, Ptr{Cchar}), o, filename)
     return
 end
 
 function c_api_Path_AddOptions(o::Options)
-    @c_api(Path_AddOptions, Cvoid, (Ptr{Cvoid},), o.ptr)
+    @c_api(Path_AddOptions, Cvoid, (Ptr{Cvoid},), o)
     return
 end
 
@@ -271,13 +275,16 @@ mutable struct MCP
     end
 end
 
+Base.cconvert(::Type{Ptr{Cvoid}}, x::MCP) = x
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::MCP) = x.ptr
+
 function c_api_MCP_Create(n::Int, nnz::Int)
     ptr = @c_api(MCP_Create, Ptr{Cvoid}, (Cint, Cint), n, nnz)
     return MCP(n, ptr)
 end
 
 function c_api_MCP_Destroy(m::MCP)
-    @c_api(MCP_Destroy, Cvoid, (Ptr{Cvoid},), m.ptr)
+    @c_api(MCP_Destroy, Cvoid, (Ptr{Cvoid},), m)
     return
 end
 
@@ -286,13 +293,13 @@ function c_api_MCP_SetInterface(m::MCP, interface::MCP_Interface)
         MCP_SetInterface,
         Cvoid,
         (Ptr{Cvoid}, Ref{MCP_Interface}),
-        m.ptr, interface
+        m, interface
     )
     return
 end
 
 function c_api_MCP_GetX(m::MCP)
-    ptr = @c_api(MCP_GetX, Ptr{Cdouble}, (Ptr{Cvoid},), m.ptr)
+    ptr = @c_api(MCP_GetX, Ptr{Cdouble}, (Ptr{Cvoid},), m)
     return copy(unsafe_wrap(Array{Cdouble}, ptr, m.n))
 end
 
@@ -413,7 +420,7 @@ end
 Returns a MCP_Termination status.
 """
 function c_api_Path_Solve(m::MCP, info::Information)
-    return @c_api(Path_Solve, Cint, (Ptr{Cvoid}, Ref{Information}), m.ptr, info)
+    return @c_api(Path_Solve, Cint, (Ptr{Cvoid}, Ref{Information}), m, info)
 end
 
 function c_api_Path_Create(maxSize::Int, maxNNZ::Int)

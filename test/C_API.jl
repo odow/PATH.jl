@@ -33,6 +33,30 @@ end
     @test isapprox(z, [2.8, 0.0, 0.8, 1.2])
 end
 
+@testset "Example LUSOL" begin
+    M = convert(
+        SparseArrays.SparseMatrixCSC{Cdouble, Cint},
+        SparseArrays.sparse([
+            0  0 -1 -1;
+            0  0  1 -2;
+            1 -1  2 -2;
+            1  2 -2  4
+        ])
+    )
+    status, z, info = PATH.solve_mcp(
+        M,
+        Float64[2, 2, -2, -6],
+        fill(0.0, 4),
+        fill(10.0, 4),
+        [0.0, 0.0, 0.0, 0.0];
+        output = "yes",
+        factorization_method = "blu_lusol",
+        factorization_library_name = PATH.LUSOL_LIBRARY_PATH,
+    )
+    @test status == PATH.MCP_Solved
+    @test isapprox(z, [2.8, 0.0, 0.8, 1.2])
+end
+
 @testset "Example II" begin
     M = [
         0  0 -1 -1;
@@ -92,19 +116,6 @@ end
         fill(10.0, 4),
         [1.0, 1.0, 1.0, 1.0];
         output = "yes"
-    )
-    @test status == PATH.MCP_Solved
-    @test isapprox(z, [1.28475, 0.972916, 0.909376, 1.17304], atol=1e-4)
-
-    status, z, info = PATH.solve_mcp(
-        F,
-        J,
-        fill(0.0, 4),
-        fill(10.0, 4),
-        [1.0, 1.0, 1.0, 1.0];
-        output = "yes",
-        factorization_method = "blu_lusol",
-        factorization_library_name = PATH.LUSOL_LIBRARY_PATH,
     )
     @test status == PATH.MCP_Solved
     @test isapprox(z, [1.28475, 0.972916, 0.909376, 1.17304], atol=1e-4)
