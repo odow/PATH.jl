@@ -64,7 +64,7 @@ Model mode: AUTOMATIC
 CachingOptimizer state: EMPTY_OPTIMIZER
 Solver name: Path 5.0.00
 
-julia> MOI.set(model, MOI.RawParameter("output"), "no")
+julia> set_optimizer_attribute(model, "output", "no")
 
 julia> @variable(model, x[1:4] >= 0)
 4-element Array{VariableRef,1}:
@@ -96,8 +96,8 @@ LOCALLY_SOLVED::TerminationStatusCode = 4
 
 ## Factorization methods
 
-By default, `PATH.jl` will download the LUSOL shared library. To use LUSOL, set
-the following options:
+By default, `PATH.jl` will download the [LUSOL](https://web.stanford.edu/group/SOL/software/lusol/)
+shared library. To use LUSOL, set the following options:
 ```julia
 model = Model(PATH.Optimizer)
 set_optimizer_attribute(model, "factorization_method", "blu_lusol")
@@ -105,11 +105,11 @@ set_optimizer_attribute(model, "factorization_library_name", PATH.LUSOL_LIBRARY_
 ```
 
 To use `factorization_method umfpack` you will need the umfpack shared lib that
-is available directly from the developers of that code for academic use.
+is available directly from the [developers of that code for academic use](http://faculty.cse.tamu.edu/davis/suitesparse.html).
 
 ## Manual installation
 
-By default `PATH.jl` will download a copy if the `libpath` library. If you
+By default `PATH.jl` will download a copy of the `libpath` library. If you
 already have one installed and want to use that, set the `PATH_JL_LOCATION`
 environment variable to point to the `libpath50.xx` library, then run
 `Pkg.build("PATH")`.
