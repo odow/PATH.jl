@@ -3,6 +3,7 @@ using SparseArrays
 using Test
 
 @testset "CheckLicense" begin
+    @test PATH.c_api_License_SetString("bad_license") != 0
     @test PATH.c_api_Path_CheckLicense(1, 1) > 0
 end
 

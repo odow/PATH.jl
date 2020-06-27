@@ -6,7 +6,7 @@ const INFINITY = 1e20
 ###
 
 function c_api_License_SetString(license::String)
-    return ccall(:(License_SetString, PATH_SOLVER), Cint, (Ptr{Cchar},), license)
+    return ccall((:License_SetString, PATH_SOLVER), Cint, (Ptr{Cchar},), license)
 end
 
 ###
@@ -16,10 +16,6 @@ end
 const c_api_Output_Log     = Cint(1 << 0)
 const c_api_Output_Status  = Cint(1 << 1)
 const c_api_Output_Listing = Cint(1 << 2)
-
-function c_api_Output_Default()
-    return ccall((:Output_Default, PATH_SOLVER), Cvoid, ())
-end
 
 mutable struct OutputInterface
     output_data::Ptr{Cvoid}
@@ -413,16 +409,6 @@ function c_api_Path_Solve(m::MCP, info::Information)
     return ccall(
         (:Path_Solve, PATH_SOLVER), Cint, (Ptr{Cvoid}, Ref{Information}), m, info
     )
-end
-
-function c_api_Path_Create(maxSize::Int, maxNNZ::Int)
-    return ccall(
-        (:Path_Create, PATH_SOLVER), Cvoid, (Cint, Cint), maxSize, maxNNZ
-    )
-end
-
-function c_api_Path_Destroy()
-    return ccall((:Path_Destroy, PATH_SOLVER), Cvoid, ())
 end
 
 ###
