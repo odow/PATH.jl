@@ -453,7 +453,7 @@ function solve_mcp(
     kwargs...
 )
     @assert length(z) == length(lb) == length(ub)
-    if isimmutable(stdout)
+    if !silent && isimmutable(stdout)
         @warn(
             "Disabling output because PATH.jl does not support writing to " *
             "this `stdout`. Are you using Atom-Hydrogen or Jupyter? See: " *
